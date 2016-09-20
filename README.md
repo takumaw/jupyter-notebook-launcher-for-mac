@@ -21,6 +21,11 @@ Build
 
 Run `python setup.py py2app`.
 
+License
+-------
+
+Released under GPL-2.0. See LICENSE.txt.
+
 Release Note
 ------------
 
