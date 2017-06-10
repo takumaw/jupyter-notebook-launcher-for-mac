@@ -1,6 +1,3 @@
-.DS_Store
 /build/*
 /dist/*
-/excluded/*
-/.idea/*
-
+/private/*

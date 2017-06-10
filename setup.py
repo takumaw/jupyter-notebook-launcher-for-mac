@@ -19,7 +19,7 @@ OPTIONS = {
         'app/resources'
     ]
 }
-NAME='Jupyter Notebook Launcher'
+NAME = 'Jupyter Notebook Launcher'
 
 setup(
     app=APP,

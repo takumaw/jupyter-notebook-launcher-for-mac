@@ -19,32 +19,10 @@ class JupyterNotebook:
 
     def start(self):
         self.proc = subprocess.Popen(shlex.split(self.jupyter_command),
-                                    shell=True,
-                                    stdin=subprocess.PIPE,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE)
-
-        """
-        print self.proc
-        print self.proc.stdin
-        print self.proc.stdout
-        print self.proc.stderr
-
-        while True:
-            ln = self.proc.stdout.readline()
-            print ln
-            print repr(ln)
-
-            if not ln and self.proc.poll() is not None:
-                break
-            else:
-                m = re.match("The Jupyter Notebook is running at: (https?://[^/]+/)", ln)
-
-                if m:
-                    self.jupyter_url = m.groups()[0]
-                    break
-        """
-
+                                     shell=True,
+                                     stdin=subprocess.PIPE,
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE)
         self.pid = self.proc.pid
         self.is_running = True
 
@@ -68,10 +46,10 @@ class JupyterNotebookLauncher(wx.TaskBarIcon):
         self.frame = frame
         if not hasattr(self, "status_item"):
             self.status_item = None
-            
+
         self.init_icon()
         self.Bind(wx.EVT_TASKBAR_LEFT_DCLICK, self.on_tasktray_activate)
-        
+
         self.jupyter_notebook_init()
 
     def CreatePopupMenu(self):
@@ -80,7 +58,7 @@ class JupyterNotebookLauncher(wx.TaskBarIcon):
         self.add_status_item(menu)
         self.jupyter_notebook_change_statusline()
         menu.AppendSeparator()
-        
+
         self.add_menu_item(menu, "Open in browser", self.jupyter_notebook_open)
         menu.AppendSeparator()
 
@@ -115,39 +93,40 @@ class JupyterNotebookLauncher(wx.TaskBarIcon):
         menu.AppendItem(item)
 
         return item
-    
+
     def add_status_item(self, menu):
         item = self.add_menu_item(menu, "", None)
         item.Enable(False)
-        
+
         self.status_item = item
-    
+
     def change_status_item(self, text):
         if self.status_item:
             self.status_item.SetItemLabel(text)
-    
+
     def jupyter_notebook_init(self):
         self.jupyter_notebook = JupyterNotebook()
         self.jupyter_notebook.start()
         self.jupyter_notebook_change_statusline()
-        
+
     def jupyter_notebook_change_statusline(self):
         if self.jupyter_notebook.is_running:
-            self.change_status_item("Running (PID: {})".format(self.jupyter_notebook.pid))
+            self.change_status_item(
+                "Running (PID: {})".format(self.jupyter_notebook.pid))
         else:
             self.change_status_item("Not running")
-    
+
     def jupyter_notebook_open(self, evt):
         self.jupyter_notebook.open()
-        
+
     def jupyter_notebook_start(self, evt):
         self.jupyter_notebook.start()
         self.jupyter_notebook_change_statusline()
-        
+
     def jupyter_notebook_stop(self, evt):
         self.jupyter_notebook.stop()
         self.jupyter_notebook_change_statusline()
-        
+
     def jupyter_notebook_restart(self, evt):
         self.jupyter_notebook.restart()
         self.jupyter_notebook_change_statusline()
@@ -155,7 +134,7 @@ class JupyterNotebookLauncher(wx.TaskBarIcon):
 
 class MainFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, None, wx.ID_ANY, "", size=(1,1))
+        wx.Frame.__init__(self, None, wx.ID_ANY, "", size=(1, 1))
         self.trayicon = JupyterNotebookLauncher(self)
         self.Bind(wx.EVT_CLOSE, self.on_close_window)
 
